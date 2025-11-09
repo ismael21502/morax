@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Home",
+    "joints": {
+      "J1": 0,
+      "J2": 45,
+      "J3": 45,
+      "J4": 0
+    },
+    "gripperOpening": 0,
+    "coords": {
+      "X": 0.4,
+      "Y": 0,
+      "Z": 0.13
+    }
+  },
+  {
+    "name": "Zero",
+    "joints": {
+      "J1": 0,
+      "J2": 0,
+      "J3": 0,
+      "J4": 0
+    },
+    "gripperOpening": 0,
+    "coords": {
+      "X": 0,
+      "Y": 0,
+      "Z": 0.46
+    }
+  },
+  {
+    "name": "Park",
+    "joints": {
+      "J1": 0,
+      "J2": 120,
+      "J3": -135,
+      "J4": 0
+    },
+    "gripperOpening": 100,
+    "coords": {
+      "X": 0.09,
+      "Y": 0,
+      "Z": 0.17
+    }
+  }
+]

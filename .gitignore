@@ -1,0 +1,65 @@
+# =====================
+# Node / Frontend
+# =====================
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+dist-ssr/
+
+# Environment variables
+.env
+*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Lockfiles
+# Mantén solo los relevantes (por ejemplo el de morax-gui)
+# package-lock.json
+# yarn.lock
+
+# Frontend editor settings
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# =====================
+# Python / Backend
+# =====================
+# Compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments (si usas venv)
+venv/
+env/
+
+# Coverage reports
+htmlcov/
+.coverage
+coverage/
+
+# =====================
+# System files
+# =====================
+.DS_Store
+Thumbs.db
+
+# =====================
+# Optional: temporary files
+# =====================
+*.tmp
+*.temp
