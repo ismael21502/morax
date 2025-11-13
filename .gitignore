@@ -63,5 +63,11 @@ Thumbs.db
 # =====================
 *.tmp
 *.temp
+# ====================
+# tauri builds
+# ====================
+
+Frontend/morax-gui/src-tauri
+Frontend/morax-gui/Morax GUI
 
 todo.md

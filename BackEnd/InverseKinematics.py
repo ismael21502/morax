@@ -21,7 +21,7 @@ import math
 #     return solution
 import math
 
-def inverse_3R(x, y, z):
+def Inverse_Kinematics(x, y, z):
     import math
 
     # Longitudes de eslabones (m)
@@ -44,7 +44,7 @@ def inverse_3R(x, y, z):
 
     # --- Configuración codo arriba ---
     theta2 = math.atan2(z_eff, r) - math.atan2(L3 * math.sin(theta3), L2 + L3 * math.cos(theta3))
-
+    
 
     # --- Convertir a grados ---
     theta1_deg = round(math.degrees(theta1))

@@ -10,17 +10,17 @@ def MatrixFromDH(theta, alfa, a, d):
     ])
     return matrix
 
-theta1, alpha1,  L1 = sp.symbols('theta_1 alpha_1 L_1')
-theta2, alpha2, L2 = sp.symbols('theta_2 alpha_2 L_2')
-theta3, alpha3,  L3 = sp.symbols('theta_3 alpha_3 L_3')
+# theta1, alpha1,  L1 = sp.symbols('theta_1 alpha_1 L_1')
+# theta2, alpha2, L2 = sp.symbols('theta_2 alpha_2 L_2')
+# theta3, alpha3,  L3 = sp.symbols('theta_3 alpha_3 L_3')
 
-T01 = MatrixFromDH(theta1, -sp.pi/2, 0, L1)
-T12 = MatrixFromDH(theta2, 0, L2, 0)
-T23 = MatrixFromDH(theta3, 0, L3, 0)
+# T01 = MatrixFromDH(theta1, -sp.pi/2, 0, L1)
+# T12 = MatrixFromDH(theta2, 0, L2, 0)
+# T23 = MatrixFromDH(theta3, 0, L3, 0)
 
-T02 = T01*T12
-T03 = T02*T23
-sp.pprint(T03)
+# T02 = T01*T12
+# T03 = T02*T23
+# sp.pprint(T03)
 # sp.pprint(T03)
 # # Definir variables simbólicas
 # theta1, alpha1, L1 = sp.symbols('theta_1 alpha_1 L_1')

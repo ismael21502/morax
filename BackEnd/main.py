@@ -3,20 +3,28 @@ import serial
 import json
 from datetime import datetime
 import asyncio
-from InverseKinematics import inverseKinematics
-from IK2 import inverse_3R
-from HomogeneousTransformation import MatrixFromDH
+from InverseKinematics import Inverse_Kinematics
+# from BackEnd.IK import inverse_3R
+from ForwardKinematics import MatrixFromDH
 import sympy as sp
 from sympy import lambdify
 import math
 from fastapi.middleware.cors import CORSMiddleware
 import time
-
+import os
+print(os.getcwd())
 # Permitir solicitudes desde tu frontend
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # o ["*"] para permitir todos
+    # allow_origins=[
+    #     "http://localhost",
+    #     "http://localhost:5173",
+    #     "tauri://localhost",
+    #     "app://.",
+    #     "null",
+    # ],  # o ["*"] para permitir todos
+    allow_origins=["*", "http://localhost:5173", "http://localhost"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -122,12 +130,18 @@ async def delete_position(item: dict):
 
 @app.get("/positions")
 async def get_positions():
+    import os, json
     try:
-        with open("positions.json", "r") as f:
-            data = json.load(f)  # ya será una lista
+        file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "positions.json")
+        print("Intentando abrir:", file_path)
+        with open(file_path, "r") as f:
+            data = json.load(f)
+        print("Contenido leído:", data)
         return data
-    except (FileNotFoundError, json.JSONDecodeError):
+    except Exception as e:
+        print("Error leyendo positions.json:", e)
         return []
+
 
 
 theta1, L1 = sp.symbols('theta_1 L_1')
@@ -170,23 +184,25 @@ async def process_gui_command(ws: WebSocket, data: dict):
     # --- INICIO DE TU LÓGICA EXISTENTE ---
     
     if data.get("type") == "joints":
-        print("Recibido desde GUI:", data)
+        # print("Recibido desde GUI:", data)
         values = data['data']['joints']
         dataToSend = {
             'type': 'joints',
-            'data': [values['J1'], values['J2'], values['J3']]
+            'data': [values['J1'], 
+                     values['J2'], 
+                     values['J3']]
         }
         # ... (cálculo de FK) ...
         x, y, z = fk_func(
                     0,
                     185/1000,
-                    230/1000,
-                    math.radians(values['J1']) - math.pi/2,
-                    math.radians(values['J2']) - math.pi,
-                    math.radians(values['J3']) - math.pi/2
+                    270/1000,
+                    math.radians(values['J1']),
+                    math.radians(values['J2']) - math.pi/2, #Offset porque zero debe ser extendido hacia arriba
+                    math.radians(values['J3'])
                 )
         await send_log(ws, "COORDS", {'X':round(x,2), 'Y':round(y,2), 'Z':round(z,2)}) # Envía log a la GUI
-        
+        print(dataToSend)
         await send_to_esp32(dataToSend) # <-- ¡REEMPLAZO CLAVE!
 
     elif data.get("type") == "cartesian":
@@ -194,12 +210,11 @@ async def process_gui_command(ws: WebSocket, data: dict):
         
         # --- ¡AÑADE ESTO DE VUELTA! ---
         # (Esta lógica la tenías en tu código anterior)
-        IK = inverse_3R(float(values["X"]), float(values["Y"]), float(values["Z"]*-1))
-        print(IK)
+        IK = Inverse_Kinematics(float(values["X"]), float(values["Y"]), float(values["Z"]*-1))
         theta_1 = IK['theta_1']
         theta_2 = IK['theta_2']
         theta_3 = IK['theta_3']
-        theta_2 = theta_2 + 90 # Offset
+        theta_2 = theta_2 + 90 # Offset para que zero sea extendido hacia arriba
         
         # Opcional: Envía un log de vuelta a la GUI si lo necesitas
         await send_log(ws, "JOINTS", {'J1': theta_1, 'J2': theta_2, 'J3': theta_3, 'J4': 0})
@@ -212,6 +227,7 @@ async def process_gui_command(ws: WebSocket, data: dict):
             'type': 'joints',
             'data': [theta_1, theta_2, theta_3] 
         }
+        print(dataToSend)
         await send_to_esp32(dataToSend)
 
     elif data.get("type") == "gripper":
